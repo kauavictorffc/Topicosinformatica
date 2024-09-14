@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registro-alunos
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: registro-alunos
+  template:
+    metadata:
+      labels:
+        app: registro-alunos
+    spec:
+      containers:
+      - name: web
+        image: seu_usuario/registro_alunos:latest
+        ports:
+        - containerPort: 80

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-autoscaler
+  namespace: kube-system
+  labels:
+    k8s-app: cluster-autoscaler
+    k8s-addon: cluster-autoscaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: cluster-autoscaler
+      k8s-addon: cluster-autoscaler
+  template:
+    metadata:
+      labels:
+        k8s-app: cluster-autoscaler
+        k8s-addon: cluster-autoscaler
+    spec:
+      containers:
+      - name: cluster-autoscaler
+        image: k8s.gcr.io/cluster-autoscaler/cluster-autoscaler:v1.22.0
+        command:
+        - ./cluster-autoscaler
+        - --v=4
+        - --cloud-provider=aws
+        - --scale-down-enabled=true
+        - --scale-up-enabled=true
+        - --nodes=1:10:<YOUR-ASG-NAME>
+        env:
+        - name: CLUSTER_NAME
+          value: "<YOUR-CLUSTER-NAME>"
+        - name: AWS_REGION
+          value: "<YOUR-REGION>"
+        volumeMounts:
+        - mountPath: /etc/ssl/certs
+          name: ssl-certs
+      volumes:
+      - na
